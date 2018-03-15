@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM template with API defined in an external Swagger file along with Lambda integrations and CORS configurations
+
+Parameters:
+  BucketName:
+    Type: String
+    Default: aws-lambda-nr-postdeploy
+  NRLicenseKey:
+    Type: String
+
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+
+      DefinitionBody:
+          'Fn::Transform':
+            Name: 'AWS::Include'
+            Parameters:
+              Location: !Sub 's3://${BucketName}/swagger.yml'
+
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./express-app
+      Handler: index.handler
+      Runtime: nodejs6.10
+      Timeout: 30
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: /
+            Method: ANY
+
+Outputs:
+  ApiUrl:
+    Description: URL of your API endpoint
+    Value: !Join
+      - ''
+      - - https://
+        - !Ref ApiGatewayApi
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com/Prod'
