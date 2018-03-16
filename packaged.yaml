@@ -27,12 +27,18 @@ Resources:
           Name: AWS::Include
           Parameters:
             Location:
-              Fn::Sub: s3://${BucketName}/swagger.yml
+              Fn::Sub: s3://${BucketName}/swagger.yaml
       StageName: Prod
     Type: AWS::Serverless::Api
   LambdaFunction:
     Properties:
-      CodeUri: s3://aws-lambda-nr-postdeploy/78fb084d63587d08896d72e54fe10edc
+      AutoPublishAlias: live
+      CodeUri: s3://aws-lambda-nr-postdeploy/ddb00926b87eb3595e25ab858a59ebd8
+      DeploymentPreference:
+        Hooks:
+          PostTraffic:
+            Ref: PostTrafficHookFunction
+        Type: AllAtOnce
       Events:
         ProxyApiRoot:
           Properties:
@@ -42,7 +48,36 @@ Resources:
               Ref: ApiGatewayApi
           Type: Api
       Handler: index.handler
+      MemorySize: 512
       Runtime: nodejs6.10
       Timeout: 30
+    Type: AWS::Serverless::Function
+  PostTrafficHookFunction:
+    Properties:
+      CodeUri: s3://aws-lambda-nr-postdeploy/91c7345aac0e102fa31a68b3438f3738
+      DeploymentPreference:
+        Enabled: false
+      Environment:
+        Variables:
+          CurrentVersion:
+            Ref: LambdaFunction.Version
+      FunctionName: CodeDeployHook_postTrafficHook
+      Handler: index.handler
+      Policies:
+      - Statement:
+        - Action:
+          - codedeploy:PutLifecycleEventHookExecutionStatus
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentgroup:${ServerlessDeploymentApplication}/*
+        Version: '2012-10-17'
+      - Statement:
+        - Action:
+          - lambda:InvokeFunction
+          Effect: Allow
+          Resource:
+            Ref: LambdaFunction.Version
+        Version: '2012-10-17'
+      Runtime: nodejs6.10
     Type: AWS::Serverless::Function
 Transform: AWS::Serverless-2016-10-31
