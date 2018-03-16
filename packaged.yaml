@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: AWS SAM template with API defined in an external Swagger file along with
-  Lambda integrations and CORS configurations
+Description: AWS Lambda + AWS API Gateway + Express + New Relic Browser
 Outputs:
   ApiUrl:
     Description: URL of your API endpoint
@@ -16,7 +15,9 @@ Parameters:
   BucketName:
     Default: aws-lambda-nr-postdeploy
     Type: String
-  NRLicenseKey:
+  NRAccountId:
+    Type: String
+  NRInsightsQueryKey:
     Type: String
 Resources:
   ApiGatewayApi:
@@ -33,7 +34,7 @@ Resources:
   LambdaFunction:
     Properties:
       AutoPublishAlias: live
-      CodeUri: s3://aws-lambda-nr-postdeploy/ddb00926b87eb3595e25ab858a59ebd8
+      CodeUri: s3://aws-lambda-nr-postdeploy/3aa0a0db2b40fd3d52b32ccf2cafe6d4
       DeploymentPreference:
         Hooks:
           PostTraffic:
@@ -54,13 +55,17 @@ Resources:
     Type: AWS::Serverless::Function
   PostTrafficHookFunction:
     Properties:
-      CodeUri: s3://aws-lambda-nr-postdeploy/91c7345aac0e102fa31a68b3438f3738
+      CodeUri: s3://aws-lambda-nr-postdeploy/8604f0685ac59a9852e41f4693988f04
       DeploymentPreference:
         Enabled: false
       Environment:
         Variables:
           CurrentVersion:
             Ref: LambdaFunction.Version
+          NEWRELIC_ACCOUNT_ID:
+            Ref: NRAccountId
+          NEWRELIC_INSIGHTS_QUERY_KEY:
+            Ref: NRInsightsQueryKey
       FunctionName: CodeDeployHook_postTrafficHook
       Handler: index.handler
       Policies:

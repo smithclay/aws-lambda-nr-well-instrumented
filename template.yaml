@@ -1,12 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: AWS SAM template with API defined in an external Swagger file along with Lambda integrations and CORS configurations
+Description: AWS Lambda + AWS API Gateway + Express + New Relic Browser
 
 Parameters:
   BucketName:
     Type: String
     Default: aws-lambda-nr-postdeploy
-  NRLicenseKey:
+  NRAccountId:
+    Type: String
+  NRInsightsQueryKey:
     Type: String
 
 Resources:
@@ -69,6 +71,8 @@ Resources:
       Environment:
         Variables:
           CurrentVersion: !Ref LambdaFunction.Version
+          NEWRELIC_INSIGHTS_QUERY_KEY: !Ref NRInsightsQueryKey
+          NEWRELIC_ACCOUNT_ID: !Ref NRAccountId
 
 Outputs:
   ApiUrl:

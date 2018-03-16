@@ -19,5 +19,5 @@ WIP. Real user monitoring for validating a AWS Lambda-powered web application.
 ### deploying
 
 ```
-    $ sam deploy --template-file ./packaged.yaml --stack-name lambda-stack-postdeploy --capabilities CAPABILITY_NAMED_IAM
+    $ sam deploy --template-file ./packaged.yaml --stack-name lambda-stack-postdeploy --capabilities CAPABILITY_NAMED_IAM --parameter-overrides "NRAccountId=<<account id>>" "NRInsightsQueryKey=<<insights query key>>"
 ```

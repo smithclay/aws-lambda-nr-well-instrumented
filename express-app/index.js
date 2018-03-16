@@ -18,7 +18,6 @@ const addInstrumentationJs = (releaseName, version) => {
 }
 
 app.get('/', (req, res) => {
-  console.log(process.env);
   res.render('index', {
     addInstrumentationJs: addInstrumentationJs,
     AWS_LAMBDA_FUNCTION_VERSION: process.env.AWS_LAMBDA_FUNCTION_VERSION,
