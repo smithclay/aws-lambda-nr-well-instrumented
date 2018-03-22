@@ -14,7 +14,7 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 // Adds a custom attribute to a New Relic Browser PageView event.
 // https://docs.newrelic.com/docs/browser/new-relic-browser/browser-agent-spa-api/set-custom-attribute
 const addInstrumentationJs = (releaseName, version) => {
-    return `if (typeof newrelic == 'object') { newrelic.setCustomAttribute('${releaseName}', '${version}');\nnewrelic.addRelease('${releaseName}', '${version}');\nthrow new Error('synthetic error'); }`;
+    return `if (typeof newrelic == 'object') { newrelic.setCustomAttribute('${releaseName}', '${version}');\nnewrelic.addRelease('${releaseName}', '${version}');}\n`;
 }
 
 app.get('/', (req, res) => {
@@ -30,3 +30,5 @@ const server = awsServerlessExpress.createServer(app)
 exports.handler = (event, context) => {
   awsServerlessExpress.proxy(server, event, context);
 }
+
+exports.app = app;
