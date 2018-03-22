@@ -3,11 +3,22 @@
 
 WIP. Real user monitoring for validating a AWS Lambda-powered web application.
 
+Uses AWS CodeDeploy hooks to automatically roll back a deployment if frontend errors are detected.
+
 ### requirements
 
 * AWS Account
 * New Relic Account with Browser
 * New Relic Insights Query Key
+
+### additional instrumentation included
+
+**Custom Metrics**
+* Time to interactive (frontend)
+* Time to hero image (frontend)
+
+**Custom Facets**
+* Deployed function version (i.e. backend deployed version)
 
 ### setup
 
