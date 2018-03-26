@@ -18,11 +18,17 @@ const addInstrumentationJs = (releaseName, version) => {
 }
 
 app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'private')
   res.render('index', {
     addInstrumentationJs: addInstrumentationJs,
     AWS_LAMBDA_FUNCTION_VERSION: process.env.AWS_LAMBDA_FUNCTION_VERSION,
     apiUrl: req.apiGateway ? `https://${req.apiGateway.event.headers.Host}/${req.apiGateway.event.requestContext.stage}` : 'http://localhost:3000'
   })
+})
+
+app.get('/greeting', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify({'greeting': 'Hello!'}));
 })
 
 const server = awsServerlessExpress.createServer(app)

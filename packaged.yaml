@@ -34,13 +34,20 @@ Resources:
   LambdaFunction:
     Properties:
       AutoPublishAlias: live
-      CodeUri: s3://aws-lambda-nr-postdeploy/da6b344caa86c4ea66851e454f4111be
+      CodeUri: s3://aws-lambda-nr-postdeploy/300fa4e287a0ad79c9e4b006fa3d3395
       DeploymentPreference:
         Hooks:
           PostTraffic:
             Ref: PostTrafficHookFunction
         Type: AllAtOnce
       Events:
+        Greeting:
+          Properties:
+            Method: ANY
+            Path: /greeting
+            RestApiId:
+              Ref: ApiGatewayApi
+          Type: Api
         ProxyApiRoot:
           Properties:
             Method: ANY
@@ -100,6 +107,14 @@ Resources:
               - .amazonaws.com/Prod
       Events:
         CheckWebsiteScheduledEvent:
+          Properties:
+            Schedule: rate(1 minute)
+          Type: Schedule
+        CheckWebsiteScheduledEvent2:
+          Properties:
+            Schedule: rate(1 minute)
+          Type: Schedule
+        CheckWebsiteScheduledEvent3:
           Properties:
             Schedule: rate(1 minute)
           Type: Schedule

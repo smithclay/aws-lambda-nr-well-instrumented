@@ -47,10 +47,15 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
             Path: /
             Method: ANY
-
+        Greeting:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: /greeting
+            Method: ANY
   #
   # Synthetic Web Traffic Generator (using headless Chromium)
-  # Visits the external URL every minute using Cloudwatch Events
+  # Visits the external URL 3x minute using 3 Cloudwatch Events
   #
   SyntheticTrafficFunction:
     Type: AWS::Serverless::Function
@@ -63,6 +68,14 @@ Resources:
       Timeout: 25
       Events:
         CheckWebsiteScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+        CheckWebsiteScheduledEvent2:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+        CheckWebsiteScheduledEvent3:
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)

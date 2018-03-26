@@ -12,6 +12,7 @@ This project is designed to show instrumentation best practices for a customer-f
 * AWS Account
 * New Relic Account with Browser
 * New Relic Insights Query Key
+* `swagger.yaml` API definition file deployed to a S3 bucket specified in `template.yaml`
 
 ### additional instrumentation included
 

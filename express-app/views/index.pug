@@ -17,30 +17,44 @@ block body
             a(href='#') Home
 
   block content
-    div(style='padding: 40px 15px; text-align: center;')
-      .container
-        h1 Serverless Well-instrumented Application
-          p.lead
-            br
-            | This app is an example of how to deploy a serverless frontend application. 
-            br
-            br
-            | It is instrumented to collect user experience metrics including 
-            a(href='https://developers.google.com/web/tools/lighthouse/audits/time-to-interactive') time to interative (TTI)
-            |  and deployment details. It will automatically roll back if there are errors using AWS CodeDeploy features.
-          p.img
-            img(src='//via.placeholder.com/350x150', title='hero image')
-            script.
-              newrelic.setCustomAttribute('timeToHeroImage', Date.now() - performance.timing.navigationStart);
+    .container
 
-    //- Instrument session with current deployed function version
-    script!=addInstrumentationJs('functionVersion', AWS_LAMBDA_FUNCTION_VERSION)
-    script(src='https://unpkg.com/tti-polyfill@0.2.2/tti-polyfill.js')
-    //- Instrument time to interactive using polyfill
-    script.
-      ttiPolyfill.getFirstConsistentlyInteractive().then(function(tti) {
-        newrelic.addToTrace({'timeToInteractive': performance.timing.navigationStart + tti});
-        newrelic.setCustomAttribute('timeToInteractive', tti);
-      });
-    script.
+      .container(style='padding: 40px 15px; text-align: center;')
+          .jumbotron
+            p.img
+              img(src='//s3-us-west-2.amazonaws.com/aws-lambda-nr-postdeploy/nr-logo.png', height='80px', title='hero image')
+              script.
+                newrelic.setCustomAttribute('timeToHeroImage', Date.now() - performance.timing.navigationStart);
+            h1 Well-instrumented Application
+            p.lead
+              h4#greeting
+              br
+              | This app is an example of a serverless frontend application. 
+              br
+              br
+              | It is instrumented to collect user experience metrics including 
+              a(href='https://developers.google.com/web/tools/lighthouse/audits/time-to-interactive') time to interative (TTI)
+              |  and deployment details. It will automatically roll back if there are errors using AWS CodeDeploy features.
+            .btn-toolbar
+              a.btn.btn-primary.btn-lg(href="#" role="button") Learn more
+              a.btn.btn-danger.btn-lg#error-btn(href="#" role="button") Generate Error
+      footer.footer(style='padding: 40px 15px; text-align: center;')
+        p &copy; 2018
+
+block append scripts
+  //- Instrument session with current deployed function version
+  script!=addInstrumentationJs('functionVersion', AWS_LAMBDA_FUNCTION_VERSION)
+  script(src='https://unpkg.com/tti-polyfill@0.2.2/tti-polyfill.js')
+
+block append scripts
+  script.
+    $('#error-btn').click(function() {
       throw new Error('synthetic error');
+    });
+    $.get('/Prod/greeting', function(data) { $('#greeting').text(data.greeting); })
+  //- Instrument time to interactive using polyfill
+  script.
+    ttiPolyfill.getFirstConsistentlyInteractive().then(function(tti) {
+      newrelic.addToTrace({'timeToInteractive': performance.timing.navigationStart + tti});
+      newrelic.setCustomAttribute('timeToInteractive', tti);
+    });
