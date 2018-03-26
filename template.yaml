@@ -19,11 +19,14 @@ Resources:
       Cors: "'*'"
 
       DefinitionBody:
-          'Fn::Transform':
-            Name: 'AWS::Include'
-            Parameters:
-              Location: !Sub 's3://${BucketName}/swagger.yaml'
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub 's3://${BucketName}/swagger.yaml'
 
+  #
+  # Express.js Application
+  #
   LambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -45,6 +48,37 @@ Resources:
             Path: /
             Method: ANY
 
+  #
+  # Synthetic Web Traffic Generator (using headless Chromium)
+  # Visits the external URL every minute using Cloudwatch Events
+  #
+  SyntheticTrafficFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # lambdium v0.1.2
+      CodeUri: s3://lambdium-upload-bucket/4fcc083b4f8302daf6c68d19001d8c8d
+      Runtime: nodejs6.10
+      Handler: index.handler
+      MemorySize: 1154
+      Timeout: 25
+      Events:
+        CheckWebsiteScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+      Environment:
+        Variables:
+          PAGE_URL: !Join
+            - ''
+            - - https://
+              - !Ref ApiGatewayApi
+              - '.execute-api.'
+              - !Ref 'AWS::Region'
+              - '.amazonaws.com/Prod'
+
+  #
+  # CodeDeploy Check: validate frontend has no errors before final rollout
+  #
   PostTrafficHookFunction:
     Type: AWS::Serverless::Function
     Properties:

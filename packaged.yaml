@@ -34,7 +34,7 @@ Resources:
   LambdaFunction:
     Properties:
       AutoPublishAlias: live
-      CodeUri: s3://aws-lambda-nr-postdeploy/3aa0a0db2b40fd3d52b32ccf2cafe6d4
+      CodeUri: s3://aws-lambda-nr-postdeploy/da6b344caa86c4ea66851e454f4111be
       DeploymentPreference:
         Hooks:
           PostTraffic:
@@ -84,5 +84,28 @@ Resources:
             Ref: LambdaFunction.Version
         Version: '2012-10-17'
       Runtime: nodejs6.10
+    Type: AWS::Serverless::Function
+  SyntheticTrafficFunction:
+    Properties:
+      CodeUri: s3://lambdium-upload-bucket/4fcc083b4f8302daf6c68d19001d8c8d
+      Environment:
+        Variables:
+          PAGE_URL:
+            Fn::Join:
+            - ''
+            - - https://
+              - Ref: ApiGatewayApi
+              - .execute-api.
+              - Ref: AWS::Region
+              - .amazonaws.com/Prod
+      Events:
+        CheckWebsiteScheduledEvent:
+          Properties:
+            Schedule: rate(1 minute)
+          Type: Schedule
+      Handler: index.handler
+      MemorySize: 1154
+      Runtime: nodejs6.10
+      Timeout: 25
     Type: AWS::Serverless::Function
 Transform: AWS::Serverless-2016-10-31
