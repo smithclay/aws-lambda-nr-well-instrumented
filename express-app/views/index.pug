@@ -17,6 +17,9 @@ block body
             a(href='#') Home
 
   block content
+    script.
+      // Synchronous JavaScript: Delay the DOMContentLoaded event
+      for(var i=0; i<100000000; i++) {}
     .container
 
       .container(style='padding: 40px 15px; text-align: center;')
@@ -36,7 +39,7 @@ block body
               a(href='https://developers.google.com/web/tools/lighthouse/audits/time-to-interactive') time to interative (TTI)
               |  and deployment details. It will automatically roll back if there are errors using AWS CodeDeploy features.
             .btn-toolbar
-              a.btn.btn-primary.btn-lg(href="#" role="button") Learn more
+              a.btn.btn-primary.btn-lg(href="https://github.com/smithclay/aws-lambda-nr-well-instrumented" role="button" target="_blank") Learn more
               a.btn.btn-danger.btn-lg#error-btn(href="#" role="button") Generate Error
       footer.footer(style='padding: 40px 15px; text-align: center;')
         p &copy; 2018

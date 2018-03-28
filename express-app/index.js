@@ -27,8 +27,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/greeting', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({'greeting': 'Hello!'}));
+  setTimeout(function() {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({'greeting': 'Hello!'}));
+  }, 100 + Math.floor(Math.random() * 300));
 })
 
 const server = awsServerlessExpress.createServer(app)
