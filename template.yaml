@@ -79,6 +79,10 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)
+        UserError:
+          Type: Schedule
+          Properties:
+            Schedule: rate(3 minutes)
             Input: '{"Base64Script": "JGJyb3dzZXIuZ2V0KCdodHRwczovL295M2tmNDlvNzkuZXhlY3V0ZS1hcGkudXMtd2VzdC0yLmFtYXpvbmF3cy5jb20vUHJvZCcpLnRoZW4oZnVuY3Rpb24oKXsNCiAgcmV0dXJuICRicm93c2VyLmZpbmRFbGVtZW50KCRkcml2ZXIuQnkuaWQoJ2Vycm9yLWJ0bicpKS50aGVuKGZ1bmN0aW9uKGVsZW1lbnQpew0KICAgIGNvbnNvbGUubG9nKCdjbGlja2luZyBlcnJvciBidXR0b24hJyk7DQogICAgcmV0dXJuIGVsZW1lbnQuY2xpY2soKS50aGVuKGZ1bmN0aW9uKCl7DQogICAgICAkYnJvd3Nlci53YWl0KGZ1bmN0aW9uKCkgew0KICAgICAgICByZXR1cm4gJGRyaXZlci51bnRpbC5lbGVtZW50TG9jYXRlZCgkZHJpdmVyLkJ5LnhwYXRoKCIvLypbY29udGFpbnModGV4dCgpLCdIZWxsbyEnKV0iKSk7DQogICAgICB9LCAxMDAwMCkudGhlbihmdW5jdGlvbigpIHsNCiAgICAgICAgY29uc29sZS5sb2coJ2ZvdW5kIGFqYXggcmVzcG9uc2UnKTsNCiAgICAgIH0pOw0KICAgIH0pOw0KICB9KTsNCn0pOw0KDQo="}'
       Environment:
         Variables:

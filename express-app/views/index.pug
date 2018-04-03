@@ -52,7 +52,7 @@ block append scripts
 block append scripts
   script.
     $('#error-btn').click(function() {
-      throw new Error('synthetic error');
+      newrelic.noticeError(new Error('synthetic error'));
     });
     $.get('/Prod/greeting', function(data) { $('#greeting').text(data.greeting); })
   //- Instrument time to interactive using polyfill
