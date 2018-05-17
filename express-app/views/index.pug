@@ -28,7 +28,7 @@ block body
               img(src='//s3-us-west-2.amazonaws.com/aws-lambda-nr-postdeploy/nr-logo.png', height='80px', title='hero image')
               script.
                 newrelic.setCustomAttribute('timeToHeroImage', Date.now() - performance.timing.navigationStart);
-            h1 Well-instrumented Application
+            h1 Well-instrumented Application: v#{AWS_LAMBDA_FUNCTION_VERSION}
             p.lead
               h4#greeting
               br
