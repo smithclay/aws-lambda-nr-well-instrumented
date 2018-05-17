@@ -39,6 +39,7 @@ exports.handler = (event, context, callback) => {
           try {
             const response = JSON.parse(responseBody);
             const errorCount = response.results[0].count;
+            console.log(`Number of errors for function ${version}: ${errorCount}`);
             if (errorCount > 0) {
               status = 'Failed';
             }

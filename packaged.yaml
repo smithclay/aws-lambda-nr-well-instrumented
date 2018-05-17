@@ -34,12 +34,12 @@ Resources:
   LambdaFunction:
     Properties:
       AutoPublishAlias: live
-      CodeUri: s3://aws-lambda-nr-postdeploy/6c78b035a7ae65c6648eca11a1a7c21c
+      CodeUri: s3://aws-lambda-nr-postdeploy/84b434e44639c1012b425c7c9c1c629b
       DeploymentPreference:
         Hooks:
           PostTraffic:
             Ref: PostTrafficHookFunction
-        Type: AllAtOnce
+        Type: Canary10Percent5Minutes
       Events:
         Greeting:
           Properties:
@@ -62,7 +62,7 @@ Resources:
     Type: AWS::Serverless::Function
   PostTrafficHookFunction:
     Properties:
-      CodeUri: s3://aws-lambda-nr-postdeploy/8604f0685ac59a9852e41f4693988f04
+      CodeUri: s3://aws-lambda-nr-postdeploy/a306efdfca10f0d8b4200baa7ad70823
       DeploymentPreference:
         Enabled: false
       Environment:
